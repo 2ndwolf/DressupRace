@@ -38,7 +38,7 @@ int main() {
   // SDLA::Rendering::loadSurface("assets/head439.png", true);
   // SDLA::Rendering::loadSurface("assets/body0.png", true);
   // SDLA::Rendering::loadSurface("assets/hat0.png", true);
-  SDLA::Rendering::loadSurface("assets/gen_specialchest.png", true);
+  // SDLA::Rendering::loadSurface("assets/gen_specialchest.png", true);
 
 /*
   SDLA::Rendering::SpriteInfo* groupInfo = new SDLA::Rendering::SpriteInfo();
@@ -74,9 +74,16 @@ int main() {
 
 
   SDLA::Rendering rendering = SDLA::Rendering();
-  std::shared_ptr<SDLA::Rendering::Window> win = rendering.newWindow(2, (SDLA::Box) {500,500});
+  std::string win = rendering.newWindow(3, (SDLA::Box) {500,500});
 
   // SDLA::Rendering::Sprite::addImage(win, 0, new SDLA::Rendering::SpriteInfo());
+  SDLA::Rendering::Sprite::addImage(win, 2, new SDLA::Rendering::SpriteInfo(), true);
+  SDLA::Rendering::SpriteInfo* sI = new SDLA::Rendering::SpriteInfo();
+  sI->offset = {16, 16};
+  SDLA::Rendering::Sprite::addImage(win, 0, sI, true);
+  SDLA::Rendering::SpriteInfo* sI2 = new SDLA::Rendering::SpriteInfo();
+  sI2->offset = {32, 32};
+  SDLA::Rendering::Sprite::addImage(win, 2, sI2, true);
 
   Npcs::HeadsMenu{win};
   Npcs::BodiesMenu{win};
@@ -84,16 +91,15 @@ int main() {
   Npcs::Character{win};
   Npcs::RandoChar zeCat = Npcs::RandoChar{win};
 
-  SDLA::Rendering::Renderable::setWorkingWindow(win);
+      // SDLA::Rendering::Renderable::setWorkingWindow(win);
 
-  // SDL_SetRenderDrawColor(win->getContext(), 128, 0, 128, 255);
+      // SDL_SetRenderDrawColor(win->getContext(), 128, 0, 128, 255);
 
-  // Menus::createBG9(win, 0, bMenuSize, bMenuBackground);
-  // Menus::createBG9(win, 0, sMenuSize, sMenuBackground);
+      // Menus::createBG9(win, 0, bMenuSize, bMenuBackground);
+      // Menus::createBG9(win, 0, sMenuSize, sMenuBackground);
 
 
 
-  // SDLA::Rendering::Sprite::addImageGroup(win, 0, new SDLA::Rendering::SpriteInfo(), bodyGrid);
 
   // int ms = SDL_GetTicks();
   // int i = 0;
@@ -102,7 +108,6 @@ int main() {
 
   while(!close){
 
-    SDLA::ID currentWindow = SDLA::Rendering::Window::getCurrentWindowID();
     close = Input::pollEvents(); // get/store window focus for events (so they happen on the right window)
     zeCat.update();
 
@@ -115,14 +120,14 @@ int main() {
       } else {
 
       }
-      zeCat.refresh(win);
+      zeCat.refresh();
     }
 
     if(Input::Mouse::clicks[SDL_BUTTON_LEFT] == Input::KeyStates::DOWN){
     //         SDLA::Rendering::SpriteInfo* textInfo = new SDLA::Rendering::SpriteInfo();
     // textInfo->pos.worldPos = {0,400};
     // SDLA::Rendering::Text::loadText(SDLA::Rendering::Renderable::win,2,textInfo,std::to_string(SDLA::Button::buttons[currentWindow].size()),"assets/Minecraft.ttf",12, (SDL_Color) {255,255,255});
-      for(std::shared_ptr<SDLA::Button> b : SDLA::Button::buttons[currentWindow]){
+      for(std::shared_ptr<SDLA::Button> b : SDLA::Button::buttons[SDLA::Rendering::getCurrentWindow()]){
         if(Input::Mouse::mousePos.x > b->bounds.pos.x && Input::Mouse::mousePos.y > b->bounds.pos.y &&
            Input::Mouse::mousePos.x < b->bounds.pos.x + b->bounds.box.height && Input::Mouse::mousePos.y < b->bounds.pos.y + b->bounds.box.width){
            b->action(b->parameter);

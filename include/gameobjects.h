@@ -7,27 +7,30 @@
 #include "identifier.h"
 
 namespace Menus{
-  std::shared_ptr<SDLA::Rendering::SpriteGroup> createBG9(std::shared_ptr<SDLA::Rendering::Window> window, int layer, SDLA::Box sizeInBlocks, SDLA::Rendering::SpriteInfo* bgInfo);
+  std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> createBG9(std::string window, int layer, SDLA::Box sizeInBlocks, SDLA::Rendering::SpriteInfo* bgInfo, bool ignoreCamera);
 }
 
 namespace Npcs{
   class Npc {
     public:
-      Npc(){
+      Npc(std::string window){
         id = SDLA::Identifier::newID();
+        this->myWindow = window;
       }
       ~Npc(){}
-      std::vector<std::vector<std::shared_ptr<SDLA::Rendering::SpriteGroup>>> images = 
-        std::vector<std::vector<std::shared_ptr<SDLA::Rendering::SpriteGroup>>>(1,std::vector<std::shared_ptr<SDLA::Rendering::SpriteGroup>>(0));
+      std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> sprites = 
+        std::vector<std::shared_ptr<SDLA::Rendering::Sprite>>();
+      std::vector<std::shared_ptr<SDLA::Rendering::Text>> texts = 
+        std::vector<std::shared_ptr<SDLA::Rendering::Text>>();
       SDLA::ID id;
-      std::shared_ptr<SDLA::Rendering::Window> myWindow;
+      std::string myWindow;
   };
 }
 
 namespace Actions{
   class Pairings{
     public:
-    inline static std::shared_ptr<SDLA::Rendering::SpriteGroup> character;
+    inline static std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> character;
     inline static int head;
     inline static int body;
     inline static int shield;

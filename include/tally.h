@@ -12,7 +12,7 @@ namespace Tally {
 
     SDLA::Rendering::SpriteInfo* info = new SDLA::Rendering::SpriteInfo();
 
-    void initPoints(std::shared_ptr<SDLA::Rendering::Window> win);
+    void initPoints(std::string window);
     void displayPoints();
   };
 }

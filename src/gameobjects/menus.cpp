@@ -4,12 +4,8 @@
 
 namespace Menus{
 
-  std::shared_ptr<SDLA::Rendering::SpriteGroup> createBG9(std::shared_ptr<SDLA::Rendering::Window> window, int layer, SDLA::Box sizeInBlocks, SDLA::Rendering::SpriteInfo* bgInfo){
+  std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> createBG9(std::string window, int layer, SDLA::Box sizeInBlocks, SDLA::Rendering::SpriteInfo* bgInfo, bool ignoreCamera){
     std::vector<SDLA::Rendering::SpriteInfo*> menuBackground;
-    menuBackground.push_back(new SDLA::Rendering::SpriteInfo());
-    menuBackground[0]->pos.worldPos = bgInfo->pos.worldPos;
-    menuBackground[0]->pos.offset = bgInfo->pos.offset;
-
     SDLA::Box tileSize = (SDLA::Box) {bgInfo->area.box.width, bgInfo->area.box.height};
 
     for(int y = 0; y < sizeInBlocks.height; y++){
@@ -18,7 +14,7 @@ namespace Menus{
         menuElement->fileName = bgInfo->fileName;
         menuElement->area.box.width = tileSize.width;
         menuElement->area.box.height = tileSize.height;
-        menuElement->pos.offset.y = tileSize.height * y;
+        menuElement->offset.y = tileSize.height * y;
 
         if(y == 0){
           menuElement->area.pos.y = bgInfo->area.pos.y + 0;
@@ -28,7 +24,7 @@ namespace Menus{
           menuElement->area.pos.y = bgInfo->area.pos.y + tileSize.height;
         }
 
-        menuElement->pos.offset.x = tileSize.width * x;
+        menuElement->offset.x = tileSize.width * x;
 
         if(x == 0){
           menuElement->area.pos.x = bgInfo->area.pos.x + 0;
@@ -42,6 +38,6 @@ namespace Menus{
       }
     }
 
-    return SDLA::Rendering::Sprite::addImageGroup(window, layer, bgInfo, menuBackground);
+    return SDLA::Rendering::Sprite::addImageGroup(window, layer, bgInfo, menuBackground, ignoreCamera);
   }
 }

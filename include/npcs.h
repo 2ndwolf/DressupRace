@@ -9,37 +9,37 @@ namespace Npcs{
   class HeadsMenu : public Npcs::Npc {
     public:
     HeadsMenu();
-    HeadsMenu(std::shared_ptr<SDLA::Rendering::Window> window);
+    HeadsMenu(std::string window);
     ~HeadsMenu(){}
   };
 
   class BodiesMenu: public Npcs::Npc {
     public:
     BodiesMenu();
-    BodiesMenu(std::shared_ptr<SDLA::Rendering::Window> window);
+    BodiesMenu(std::string window);
     ~BodiesMenu(){}
   };
 
   class ShieldsMenu: public Npcs::Npc {
     public:
     ShieldsMenu();
-    ShieldsMenu(std::shared_ptr<SDLA::Rendering::Window> window);
+    ShieldsMenu(std::string window);
     ~ShieldsMenu(){}
   };
 
   class Character: public Npcs::Npc {
     public:
     Character();
-    Character(std::shared_ptr<SDLA::Rendering::Window> window);
+    Character(std::string window);
 
   };
 
   class RandoChar: public Npcs::Npc {
     public:
     RandoChar();
-    RandoChar(std::shared_ptr<SDLA::Rendering::Window> window);
+    RandoChar(std::string window);
     void update();
-    void refresh(std::shared_ptr<SDLA::Rendering::Window> window);
+    void refresh();
 
     int headNumber;
     int bodyNumber;

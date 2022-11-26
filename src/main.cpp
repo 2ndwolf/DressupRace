@@ -127,7 +127,7 @@ int main() {
     //         SDLA::Rendering::SpriteInfo* textInfo = new SDLA::Rendering::SpriteInfo();
     // textInfo->pos.worldPos = {0,400};
     // SDLA::Rendering::Text::loadText(SDLA::Rendering::Renderable::win,2,textInfo,std::to_string(SDLA::Button::buttons[currentWindow].size()),"assets/Minecraft.ttf",12, (SDL_Color) {255,255,255});
-      for(std::shared_ptr<SDLA::Button> b : SDLA::Button::buttons[SDLA::Rendering::getCurrentWindow()]){
+      for(std::shared_ptr<Button> b : Button::buttons[SDLA::Rendering::getCurrentWindow()]){
         if(Input::Mouse::mousePos.x > b->bounds.pos.x && Input::Mouse::mousePos.y > b->bounds.pos.y &&
            Input::Mouse::mousePos.x < b->bounds.pos.x + b->bounds.box.height && Input::Mouse::mousePos.y < b->bounds.pos.y + b->bounds.box.width){
            b->action(b->parameter);

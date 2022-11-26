@@ -44,11 +44,11 @@ namespace Npcs {
         heads.push_back(head);
 
 
-        if(SDLA::Button::buttons[window].empty()) SDLA::Button::buttons.insert({window,std::vector<std::shared_ptr<SDLA::Button>>()});
-        std::shared_ptr<SDLA::Button> button = std::make_shared<SDLA::Button>(SDLA::Bounds{head->offset+headGrid->offset,head->area.box});
+        if(Button::buttons[window].empty()) Button::buttons.insert({window,std::vector<std::shared_ptr<Button>>()});
+        std::shared_ptr<Button> button = std::make_shared<Button>(SDLA::Bounds{head->offset+headGrid->offset,head->area.box});
         button->action = Actions::setHead;
         button->parameter = i;
-        SDLA::Button::buttons[window].push_back(button);
+        Button::buttons[window].push_back(button);
 
         i++;
       }
@@ -93,11 +93,11 @@ namespace Npcs {
         body->area.pos.y = 0;
         bodies.push_back(body);
 
-        if(SDLA::Button::buttons[window].empty()) SDLA::Button::buttons.insert({window,std::vector<std::shared_ptr<SDLA::Button>>()});
-        std::shared_ptr<SDLA::Button> button = std::make_shared<SDLA::Button>(SDLA::Bounds{body->offset+bodyGrid->offset,body->area.box});
+        if(Button::buttons[window].empty()) Button::buttons.insert({window,std::vector<std::shared_ptr<Button>>()});
+        std::shared_ptr<Button> button = std::make_shared<Button>(SDLA::Bounds{body->offset+bodyGrid->offset,body->area.box});
         button->action = Actions::setBody;
         button->parameter = i;
-        SDLA::Button::buttons[window].push_back(button);
+        Button::buttons[window].push_back(button);
 
         i++;
       }
@@ -141,11 +141,11 @@ namespace Npcs {
         shield->area.pos.y = 0;
         shields.push_back(shield);
 
-        if(SDLA::Button::buttons[window].empty()) SDLA::Button::buttons.insert({window,std::vector<std::shared_ptr<SDLA::Button>>()});
-        std::shared_ptr<SDLA::Button> button = std::make_shared<SDLA::Button>(SDLA::Bounds{shield->offset+shieldGrid->offset,shield->area.box});
+        if(Button::buttons[window].empty()) Button::buttons.insert({window,std::vector<std::shared_ptr<Button>>()});
+        std::shared_ptr<Button> button = std::make_shared<Button>(SDLA::Bounds{shield->offset+shieldGrid->offset,shield->area.box});
         button->action = Actions::setShield;
         button->parameter = i;
-        SDLA::Button::buttons[window].push_back(button);
+        Button::buttons[window].push_back(button);
 
         i++;
       }

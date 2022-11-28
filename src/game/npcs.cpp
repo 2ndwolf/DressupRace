@@ -3,12 +3,12 @@
 #include <string>
 
 #include "gameobjects.h"
-#include "npcs.h"
 #include "rendering.h"
 #include "primitives.h"
 #include "identifier.h"
+#include "game.h"
 
-namespace GameObjects {
+namespace Game {
 
   std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> createBG9(std::string window, int layer, std::string fileName, SDLA::Box tileSize, SDLA::Box sizeInTiles, SDLA::Rendering::SpriteGroup* group){
     SDLA::Rendering::SpriteInfo* menuBackground = new SDLA::Rendering::SpriteInfo();
@@ -48,11 +48,11 @@ namespace GameObjects {
         images.push_back(image);
 
 
-        // if(Button::buttons[window].empty()) Button::buttons.insert({window,std::vector<std::shared_ptr<Button>>()});
-        std::shared_ptr<Button> button = std::make_shared<Button>(image, window, layer);
+        // if(GameObjects::Button::buttons[window].empty()) GameObjects::Button::buttons.insert({window,std::vector<std::shared_ptr<GameObjects::Button>>()});
+        std::shared_ptr<GameObjects::Button> button = std::make_shared<GameObjects::Button>(image, window, layer);
         button->action = Actions::setHead;
         button->parameter = i;
-        Button::buttons[window][layer].push_back(button);
+        GameObjects::Button::buttons[window][layer].push_back(button);
 
         i++;
       }
@@ -92,11 +92,11 @@ namespace GameObjects {
         images.push_back(image);
 
 
-        // if(Button::buttons[window].empty()) Button::buttons.insert({window,std::vector<std::shared_ptr<Button>>()});
-        std::shared_ptr<Button> button = std::make_shared<Button>(image, window, layer);
+        // if(GameObjects::Button::buttons[window].empty()) GameObjects::Button::buttons.insert({window,std::vector<std::shared_ptr<GameObjects::Button>>()});
+        std::shared_ptr<GameObjects::Button> button = std::make_shared<GameObjects::Button>(image, window, layer);
         button->action = Actions::setBody;
         button->parameter = i;
-        Button::buttons[window][layer].push_back(button);
+        GameObjects::Button::buttons[window][layer].push_back(button);
 
         i++;
       }
@@ -136,11 +136,11 @@ namespace GameObjects {
         images.push_back(image);
 
 
-        // if(Button::buttons[window].empty()) Button::buttons.insert({window,std::vector<std::shared_ptr<Button>>()});
-        std::shared_ptr<Button> button = std::make_shared<Button>(image, window, layer);
+        // if(GameObjects::Button::buttons[window].empty()) GameObjects::Button::buttons.insert({window,std::vector<std::shared_ptr<GameObjects::Button>>()});
+        std::shared_ptr<GameObjects::Button> button = std::make_shared<GameObjects::Button>(image, window, layer);
         button->action = Actions::setShield;
         button->parameter = i;
-        Button::buttons[window][layer].push_back(button);
+        GameObjects::Button::buttons[window][layer].push_back(button);
 
         i++;
       }

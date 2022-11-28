@@ -6,13 +6,12 @@
 #include "rendering.h"
 #include "gameobjects.h"
 
-namespace GameObjects{
+namespace Game{
   class HeadsMenu : public GameObjects::Npc {
     public:
     HeadsMenu();
     HeadsMenu(std::string window, int layer);
     ~HeadsMenu(){}
-    std::string fff = "FFF";
   };
 
   class BodiesMenu: public GameObjects::Npc {
@@ -46,6 +45,19 @@ namespace GameObjects{
     int headNumber;
     int bodyNumber;
     int shieldNumber;
+  };
+
+  class Tally : public GameObjects::Npc{
+    public:
+    inline static int pts = 0;
+
+    std::shared_ptr<SDLA::Rendering::Text> scoreTXT;
+
+    SDLA::Rendering::SpriteInfo* info = new SDLA::Rendering::SpriteInfo();
+
+    Tally(std::string window, int layer);
+    void initPoints(std::string window);
+    void displayPoints();
   };
 }
 

@@ -2,42 +2,44 @@
 #define _npcs_h
 
 #include <memory>
+#include <string>
 #include "rendering.h"
 #include "gameobjects.h"
 
-namespace Npcs{
-  class HeadsMenu : public Npcs::Npc {
+namespace GameObjects{
+  class HeadsMenu : public GameObjects::Npc {
     public:
     HeadsMenu();
-    HeadsMenu(std::string window);
+    HeadsMenu(std::string window, int layer);
     ~HeadsMenu(){}
+    std::string fff = "FFF";
   };
 
-  class BodiesMenu: public Npcs::Npc {
+  class BodiesMenu: public GameObjects::Npc {
     public:
     BodiesMenu();
-    BodiesMenu(std::string window);
+    BodiesMenu(std::string window, int layer);
     ~BodiesMenu(){}
   };
 
-  class ShieldsMenu: public Npcs::Npc {
+  class ShieldsMenu: public GameObjects::Npc {
     public:
     ShieldsMenu();
-    ShieldsMenu(std::string window);
+    ShieldsMenu(std::string window, int layer);
     ~ShieldsMenu(){}
   };
 
-  class Character: public Npcs::Npc {
+  class Character: public GameObjects::Npc {
     public:
     Character();
-    Character(std::string window);
+    Character(std::string window, int layer);
 
   };
 
-  class RandoChar: public Npcs::Npc {
+  class RandoChar: public GameObjects::Npc {
     public:
     RandoChar();
-    RandoChar(std::string window);
+    RandoChar(std::string window, int layer);
     void update();
     void refresh();
 

@@ -2,6 +2,7 @@
 
 #include "rendering.h"
 #include "gameobjects.h"
+#include "input.h"
 #include "npcs.h"
 
 namespace Actions{

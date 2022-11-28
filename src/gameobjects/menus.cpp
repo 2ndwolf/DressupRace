@@ -4,7 +4,7 @@
 
 namespace Menus{
 
-  std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> createBG9(std::string window, int layer, SDLA::Box sizeInBlocks, SDLA::Rendering::SpriteInfo* bgInfo, bool ignoreCamera){
+  std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> createBG9(std::string window, int layer, SDLA::Box sizeInBlocks, SDLA::Rendering::SpriteInfo* bgInfo, SDLA::Rendering::SpriteGroup* groupInfo){
     std::vector<SDLA::Rendering::SpriteInfo*> menuBackground;
     SDLA::Box tileSize = (SDLA::Box) {bgInfo->area.box.width, bgInfo->area.box.height};
 
@@ -38,6 +38,6 @@ namespace Menus{
       }
     }
 
-    return SDLA::Rendering::Sprite::addImageGroup(window, layer, bgInfo, menuBackground, ignoreCamera);
+    return SDLA::Rendering::Sprite::addImageGroup(window, layer, groupInfo, menuBackground);
   }
 }

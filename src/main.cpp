@@ -11,8 +11,8 @@
 #include "preferences.h"
 
 #include "audio.h"
-#include "button.h"
 #include "tally.h"
+#include "gameobjects.h"
 
 // std::map<SDLA::ID, std::vector<std::shared_ptr<SDLA::Button>>> buttons;
 
@@ -85,11 +85,25 @@ int main() {
   sI2->offset = {32, 32};
   SDLA::Rendering::Sprite::addImage(win, 2, sI2, true);
 
-  Npcs::HeadsMenu{win};
-  Npcs::BodiesMenu{win};
-  Npcs::ShieldsMenu{win};
-  Npcs::Character{win};
-  Npcs::RandoChar zeCat = Npcs::RandoChar{win};
+
+
+  GameObjects::HeadsMenu headsMENU = GameObjects::HeadsMenu{win, 1};
+      SDLA::Rendering::TextInfo* textInfo = new SDLA::Rendering::TextInfo();
+    textInfo->info = new SDLA::Rendering::SpriteInfo();
+    textInfo->info->offset = {0,400};
+    textInfo->textureText = std::to_string(headsMENU.sprites[1].size());
+    textInfo->fontName = "assets/Minecraft.ttf";
+    textInfo->size = 12;
+    textInfo->textColor = (SDL_Color) {255,255,255};
+    SDLA::Rendering::Text::loadText(win, 1, textInfo, true);
+    std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> dgfsd = headsMENU.sprites[0];
+      SDLA::Rendering::setGroupAsRotationCenter(headsMENU.sprites[1][0]->ownerGroup);
+
+
+  GameObjects::BodiesMenu{win, 1};
+  GameObjects::ShieldsMenu{win, 1};
+  GameObjects::Character{win, 1};
+  GameObjects::RandoChar zeCat = GameObjects::RandoChar{win, 1};
 
       // SDLA::Rendering::Renderable::setWorkingWindow(win);
 
@@ -111,6 +125,20 @@ int main() {
     close = Input::pollEvents(); // get/store window focus for events (so they happen on the right window)
     zeCat.update();
 
+      // SDLA::Rendering::mutex.lock();
+    // while(->writeBufferBusy){}
+              // SDLA::Rendering::getDrawWindow(headsMENU.sprites[1][0]->myWindow)->mutex.lock();
+              // for(std::shared_ptr<SDLA::Rendering::Sprite> s : headsMENU.sprites[1]){
+                // headsMENU.sprites[1][0]->ownerGroup->angle += 1;
+                // s->info->angle += 1;
+                // SDL_Delay(16);
+              // }
+              // SDLA::Rendering::getDrawWindow(headsMENU.sprites[1][0]->myWindow)->mutex.unlock();
+    // SDLA::Rendering::getCurrentWindow()->writeBufferBusy = false;
+
+      // SDLA::Rendering::mutex.unlock();
+    // headsMENU.sprites[1][0]->ownerGroup->info->angle+=1;
+
     if(Input::keyDown("VALIDATE")){
       if(Actions::Pairings::body == zeCat.bodyNumber &&
         Actions::Pairings::head == zeCat.headNumber &&
@@ -118,22 +146,16 @@ int main() {
         Audio::play("assets/BasicMeow.wav");
         Tally::Points::pts += 10;
       } else {
+        Audio::play("assets/BasicMeow.wav");
 
       }
       zeCat.refresh();
     }
 
     if(Input::Mouse::clicks[SDL_BUTTON_LEFT] == Input::KeyStates::DOWN){
-    //         SDLA::Rendering::SpriteInfo* textInfo = new SDLA::Rendering::SpriteInfo();
-    // textInfo->pos.worldPos = {0,400};
-    // SDLA::Rendering::Text::loadText(SDLA::Rendering::Renderable::win,2,textInfo,std::to_string(SDLA::Button::buttons[currentWindow].size()),"assets/Minecraft.ttf",12, (SDL_Color) {255,255,255});
-      for(std::shared_ptr<Button> b : Button::buttons[SDLA::Rendering::getCurrentWindow()]){
-        if(Input::Mouse::mousePos.x > b->bounds.pos.x && Input::Mouse::mousePos.y > b->bounds.pos.y &&
-           Input::Mouse::mousePos.x < b->bounds.pos.x + b->bounds.box.height && Input::Mouse::mousePos.y < b->bounds.pos.y + b->bounds.box.width){
-           b->action(b->parameter);
-        }
-      }
+      GameObjects::Button::searchClick();
     }
+    
 
     if(event.type == SDL_QUIT)
       break;

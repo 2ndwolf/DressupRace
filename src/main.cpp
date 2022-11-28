@@ -3,90 +3,19 @@
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 
-#include "rendering.h"
-#include "primitives.h"
-#include "input.h"
+#define MTR_ALL
+#include "_MTR.h"
 #include "gameobjects.h"
 #include "game.h"
-#include "preferences.h"
-#include "audio.h"
 
-
-// std::map<SDLA::ID, std::vector<std::shared_ptr<SDLA::Button>>> buttons;
 
 int main() {
+  MTR_Init();
 
-  Preferences::parseIni("assets/uPref.ini");
-  Input::initKeyBinds(Preferences::uPreferences::uPrefs.keys);
-  Audio::init();
-
-  SDL_Event event;
-
-  if (SDL_Init(SDL_INIT_EVERYTHING) != 0) { 
-    printf("error initializing SDL: %s\n", SDL_GetError()); 
-    return 1;
-  }
-
-  if (TTF_Init() == -1){
-    printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
-    return 1;
-  }
-
-  // SDLA::Rendering::loadSurface("assets/head440.png", true);
-  // SDLA::Rendering::loadSurface("assets/head439.png", true);
-  // SDLA::Rendering::loadSurface("assets/body0.png", true);
-  // SDLA::Rendering::loadSurface("assets/hat0.png", true);
-  // SDLA::Rendering::loadSurface("assets/gen_specialchest.png", true);
-
-/*
-  SDLA::Rendering::SpriteInfo* groupInfo = new SDLA::Rendering::SpriteInfo();
-  groupInfo->angle = 32;
-  groupInfo->pos.worldPos.x = 256;
-  groupInfo->pos.worldPos.y = 256;
-
-  // groupInfo->rotCenter = new (SDLA::Vec2) {16,20};
-  SDLA::Rendering::SpriteInfo* headInfo = new SDLA::Rendering::SpriteInfo();
-  headInfo->fileName = "assets/head440.png";
-  headInfo->area.box.width = 32;
-  headInfo->area.box.height = 32;
-  headInfo->area.pos.x = 0;
-  headInfo->area.pos.y = 64;
-  headInfo->pos.offset.x = 0;
-  headInfo->pos.offset.y = 0;
-  SDLA::Rendering::SpriteInfo* bodyInfo = new SDLA::Rendering::SpriteInfo();
-  bodyInfo->fileName = "assets/body0.png";
-  bodyInfo->area.box.width = 32;
-  bodyInfo->area.box.height = 32;
-  bodyInfo->area.pos.x = 64;
-  bodyInfo->area.pos.y = 0;
-  bodyInfo->pos.offset.x = 0;
-  bodyInfo->pos.offset.y = 16;
-
-
-*/
-
-  // std::vector<SDLA::Rendering::SpriteInfo*> bbb = {groupInfo, bodyInfo, headInfo};
-  
-
-
-
-
-  SDLA::Rendering rendering = SDLA::Rendering();
-  std::string win = rendering.newWindow(3, (SDLA::Box) {500,500});
-
-  // SDLA::Rendering::Sprite::addImage(win, 0, new SDLA::Rendering::SpriteInfo());
-  SDLA::Rendering::Sprite::addImage(win, 2, new SDLA::Rendering::SpriteInfo(), true);
-  SDLA::Rendering::SpriteInfo* sI = new SDLA::Rendering::SpriteInfo();
-  sI->offset = {16, 16};
-  SDLA::Rendering::Sprite::addImage(win, 0, sI, true);
-  SDLA::Rendering::SpriteInfo* sI2 = new SDLA::Rendering::SpriteInfo();
-  sI2->offset = {32, 32};
-  SDLA::Rendering::Sprite::addImage(win, 2, sI2, true);
-
-
+  std::string win = SDLA::render->newWindow(3, (SDLA::Box) {500,500});
 
   Game::HeadsMenu headsMENU = Game::HeadsMenu{win, 1};
-      SDLA::Rendering::TextInfo* textInfo = new SDLA::Rendering::TextInfo();
+    SDLA::Rendering::TextInfo* textInfo = new SDLA::Rendering::TextInfo();
     textInfo->info = new SDLA::Rendering::SpriteInfo();
     textInfo->info->offset = {0,400};
     textInfo->textureText = std::to_string(headsMENU.sprites[1].size());
@@ -95,23 +24,12 @@ int main() {
     textInfo->textColor = (SDL_Color) {255,255,255};
     SDLA::Rendering::Text::loadText(win, 1, textInfo, true);
     std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> dgfsd = headsMENU.sprites[0];
-      SDLA::Rendering::setGroupAsRotationCenter(headsMENU.sprites[1][0]->ownerGroup);
-
+    SDLA::Rendering::setGroupAsRotationCenter(headsMENU.sprites[1][0]->ownerGroup);
 
   Game::BodiesMenu{win, 1};
   Game::ShieldsMenu{win, 1};
   Game::Character{win, 1};
   Game::RandoChar zeCat = Game::RandoChar{win, 1};
-
-      // SDLA::Rendering::Renderable::setWorkingWindow(win);
-
-      // SDL_SetRenderDrawColor(win->getContext(), 128, 0, 128, 255);
-
-      // Menus::createBG9(win, 0, bMenuSize, bMenuBackground);
-      // Menus::createBG9(win, 0, sMenuSize, sMenuBackground);
-
-
-
 
   // int ms = SDL_GetTicks();
   // int i = 0;
@@ -154,15 +72,9 @@ int main() {
       GameObjects::Button::searchClick();
     }
     
-
-    if(event.type == SDL_QUIT)
-      break;
     SDL_Delay(16); 
   };
 
 
-  SDL_Quit();
-  rendering.~Rendering();
-
-  return 0;
+  return MTR_Close();
 }

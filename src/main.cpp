@@ -7,12 +7,10 @@
 #include "primitives.h"
 #include "input.h"
 #include "gameobjects.h"
-#include "npcs.h"
+#include "game.h"
 #include "preferences.h"
-
 #include "audio.h"
-#include "tally.h"
-#include "gameobjects.h"
+
 
 // std::map<SDLA::ID, std::vector<std::shared_ptr<SDLA::Button>>> buttons;
 
@@ -87,7 +85,7 @@ int main() {
 
 
 
-  GameObjects::HeadsMenu headsMENU = GameObjects::HeadsMenu{win, 1};
+  Game::HeadsMenu headsMENU = Game::HeadsMenu{win, 1};
       SDLA::Rendering::TextInfo* textInfo = new SDLA::Rendering::TextInfo();
     textInfo->info = new SDLA::Rendering::SpriteInfo();
     textInfo->info->offset = {0,400};
@@ -100,10 +98,10 @@ int main() {
       SDLA::Rendering::setGroupAsRotationCenter(headsMENU.sprites[1][0]->ownerGroup);
 
 
-  GameObjects::BodiesMenu{win, 1};
-  GameObjects::ShieldsMenu{win, 1};
-  GameObjects::Character{win, 1};
-  GameObjects::RandoChar zeCat = GameObjects::RandoChar{win, 1};
+  Game::BodiesMenu{win, 1};
+  Game::ShieldsMenu{win, 1};
+  Game::Character{win, 1};
+  Game::RandoChar zeCat = Game::RandoChar{win, 1};
 
       // SDLA::Rendering::Renderable::setWorkingWindow(win);
 
@@ -144,7 +142,7 @@ int main() {
         Actions::Pairings::head == zeCat.headNumber &&
         Actions::Pairings::shield == zeCat.shieldNumber){
         Audio::play("assets/BasicMeow.wav");
-        Tally::Points::pts += 10;
+        Game::Tally::pts += 10;
       } else {
         Audio::play("assets/BasicMeow.wav");
 

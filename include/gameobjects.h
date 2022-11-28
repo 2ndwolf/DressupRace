@@ -59,6 +59,7 @@ namespace GameObjects{
       return false;
     };
 
+    // change info->area to getSDLRECT().h/w
     bool clickInBounds(){
       if(info->hidden | info->ownerGroup->hidden) return false;
 
@@ -75,8 +76,8 @@ namespace GameObjects{
 
       if( Input::Mouse::mousePos.x > myOffset.x &&
           Input::Mouse::mousePos.y > myOffset.y &&
-          Input::Mouse::mousePos.x < myOffset.x + info->area.box.height &&
-          Input::Mouse::mousePos.y < myOffset.y + info->area.box.width) return true;
+          Input::Mouse::mousePos.x < myOffset.x + info->area.box.width &&
+          Input::Mouse::mousePos.y < myOffset.y + info->area.box.height) return true;
       return false;
     };
   };

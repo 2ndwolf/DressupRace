@@ -4,13 +4,13 @@
 
 namespace Menus{
 
-  std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> createBG9(std::string window, int layer, SDLA::Box sizeInBlocks, SDLA::Rendering::SpriteInfo* bgInfo, SDLA::Rendering::SpriteGroup* groupInfo){
-    std::vector<SDLA::Rendering::SpriteInfo*> menuBackground;
+  std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> createBG9(std::string window, int layer, SDLA::Box sizeInBlocks, SDLA::Rendering::SpriteInfo* bgInfo, SDLA::Rendering::Info* groupInfo){
+    std::vector<std::shared_ptr<SDLA::Rendering::SpriteInfo>> menuBackground;
     SDLA::Box tileSize = (SDLA::Box) {bgInfo->area.box.width, bgInfo->area.box.height};
 
     for(int y = 0; y < sizeInBlocks.height; y++){
       for(int x = 0; x < sizeInBlocks.width; x++){
-        SDLA::Rendering::SpriteInfo* menuElement = new SDLA::Rendering::SpriteInfo();
+        std::shared_ptr<SDLA::Rendering::SpriteInfo> menuElement = std::make_shared<SDLA::Rendering::SpriteInfo>();
         menuElement->fileName = bgInfo->fileName;
         menuElement->area.box.width = tileSize.width;
         menuElement->area.box.height = tileSize.height;

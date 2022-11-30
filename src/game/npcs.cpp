@@ -10,7 +10,7 @@
 
 namespace Game {
 
-  std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> createBG9(std::string window, int layer, std::string fileName, SDLA::Box tileSize, SDLA::Box sizeInTiles, SDLA::Rendering::SpriteGroup* group){
+  std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> createBG9(std::string window, int layer, std::string fileName, SDLA::Box tileSize, SDLA::Box sizeInTiles, SDLA::Rendering::Info* group){
     SDLA::Rendering::SpriteInfo* menuBackground = new SDLA::Rendering::SpriteInfo();
     menuBackground->fileName = fileName;
     menuBackground->area.box = tileSize;
@@ -20,13 +20,11 @@ namespace Game {
     return Menus::createBG9(window, layer, hMenuSize, menuBackground, group);
   }
 
-  HeadsMenu::HeadsMenu(std::string window, int layer) : Npc::Npc(window, layer){
+  HeadsMenu::HeadsMenu(std::string window, int layer, SDLA::Vec2 position) : Npc::Npc(window, layer){
 
-    SDLA::Rendering::SpriteGroup* menuGroup = new SDLA::Rendering::SpriteGroup();
-    menuGroup->offset.x = 10;
-    menuGroup->offset.y = 10;
+    group->offset = position;
 
-    sprites.push_back(createBG9(window, layer, "assets/menubg.png", {16,16}, {30,9}, menuGroup));
+    sprites.push_back(createBG9(window, layer, "assets/menubg.png", {16,16}, {30,9}, group));
 
     SDLA::Box gridSize = {11,3};
     SDLA::Rendering::SpriteGroup* grid = new SDLA::Rendering::SpriteGroup();
@@ -34,10 +32,10 @@ namespace Game {
     grid->offset.y = 26;
     int spacing = 8;
     int i = 0;
-    std::vector<SDLA::Rendering::SpriteInfo*> images;
+    std::vector<std::shared_ptr<SDLA::Rendering::SpriteInfo>> images;
     for(int y = 0; y < gridSize.height; y++){
       for(int x = 0; x < gridSize.width; x++){
-        SDLA::Rendering::SpriteInfo* image = new SDLA::Rendering::SpriteInfo();
+        std::shared_ptr<SDLA::Rendering::SpriteInfo> image = std::make_shared<SDLA::Rendering::SpriteInfo>();
         image->ownerGroup = std::shared_ptr<SDLA::Rendering::SpriteGroup>(grid);
         image->fileName = "assets/head" + std::to_string(i) + ".png";
         image->offset = {x * (32 + spacing), y * (32 + spacing)};
@@ -64,13 +62,11 @@ namespace Game {
     }
   }
 
-  BodiesMenu::BodiesMenu(std::string window, int layer) : Npc::Npc(window, layer){
+  BodiesMenu::BodiesMenu(std::string window, int layer, SDLA::Vec2 position) : Npc::Npc(window, layer){
 
-    SDLA::Rendering::SpriteGroup* menuGroup = new SDLA::Rendering::SpriteGroup();
-    menuGroup->offset.x = 500 - (10+7*16);
-    menuGroup->offset.y = 10 + 10 * 16;
+    group->offset = position;
 
-    sprites.push_back(createBG9(window, layer, "assets/menubg.png", {16,16}, {7,11}, menuGroup));
+    sprites.push_back(createBG9(window, layer, "assets/menubg.png", {16,16}, {7,11}, group));
 
     SDLA::Box gridSize = {2,4};
     SDLA::Rendering::SpriteGroup* grid = new SDLA::Rendering::SpriteGroup();
@@ -78,10 +74,10 @@ namespace Game {
     grid->offset.y = 10 + 11 * 16;
     int spacing = 8;
     int i = 0;
-    std::vector<SDLA::Rendering::SpriteInfo*> images;
+    std::vector<std::shared_ptr<SDLA::Rendering::SpriteInfo>> images;
     for(int y = 0; y < gridSize.height; y++){
       for(int x = 0; x < gridSize.width; x++){
-        SDLA::Rendering::SpriteInfo* image = new SDLA::Rendering::SpriteInfo();
+        std::shared_ptr<SDLA::Rendering::SpriteInfo> image = std::make_shared<SDLA::Rendering::SpriteInfo>();
         image->ownerGroup = std::shared_ptr<SDLA::Rendering::SpriteGroup>(grid);
         image->fileName = "assets/body" + std::to_string(i) + ".png";
         image->offset = {x * (32 + spacing), y * (32 + spacing)};
@@ -108,13 +104,11 @@ namespace Game {
     }
   }
 
-  ShieldsMenu::ShieldsMenu(std::string window, int layer) : Npc::Npc(window, layer){
+  ShieldsMenu::ShieldsMenu(std::string window, int layer, SDLA::Vec2 position) : Npc::Npc(window, layer){
 
-    SDLA::Rendering::SpriteGroup* menuGroup = new SDLA::Rendering::SpriteGroup();
-    menuGroup->offset.x = 10;
-    menuGroup->offset.y = 10 + 10 * 16;
+    group->offset = position;
 
-    sprites.push_back(createBG9(window, layer, "assets/menubg.png", {16,16}, {7,11}, menuGroup));
+    sprites.push_back(createBG9(window, layer, "assets/menubg.png", {16,16}, {7,11}, group));
 
     SDLA::Box gridSize = {2,4};
     SDLA::Rendering::SpriteGroup* grid = new SDLA::Rendering::SpriteGroup();
@@ -122,10 +116,10 @@ namespace Game {
     grid->offset.y = 10 + 11 * 16;
     int spacing = 8;
     int i = 0;
-    std::vector<SDLA::Rendering::SpriteInfo*> images;
+    std::vector<std::shared_ptr<SDLA::Rendering::SpriteInfo>> images;
     for(int y = 0; y < gridSize.height; y++){
       for(int x = 0; x < gridSize.width; x++){
-        SDLA::Rendering::SpriteInfo* image = new SDLA::Rendering::SpriteInfo();
+        std::shared_ptr<SDLA::Rendering::SpriteInfo> image = std::make_shared<SDLA::Rendering::SpriteInfo>();
         image->ownerGroup = std::shared_ptr<SDLA::Rendering::SpriteGroup>(grid);
         image->fileName = "assets/shield" + std::to_string(i) + ".png";
         image->offset = {x * (32 + spacing), y * (32 + spacing)};
@@ -153,13 +147,13 @@ namespace Game {
 
   }
 
-  Character::Character(std::string window, int layer) : Npc::Npc(window, layer){
-    SDLA::Rendering::SpriteGroup* characterGroup = new SDLA::Rendering::SpriteGroup();
-    characterGroup->offset = {250,250};
+  Character::Character(std::string window, int layer, SDLA::Vec2 position) : Npc::Npc(window, layer){
 
-    SDLA::Rendering::SpriteInfo* head = new SDLA::Rendering::SpriteInfo();
-    SDLA::Rendering::SpriteInfo* body = new SDLA::Rendering::SpriteInfo();
-    SDLA::Rendering::SpriteInfo* shield = new SDLA::Rendering::SpriteInfo();
+    group->offset = position;
+
+    std::shared_ptr<SDLA::Rendering::SpriteInfo> head = std::make_shared<SDLA::Rendering::SpriteInfo>();
+    std::shared_ptr<SDLA::Rendering::SpriteInfo> body = std::make_shared<SDLA::Rendering::SpriteInfo>();
+    std::shared_ptr<SDLA::Rendering::SpriteInfo> shield = std::make_shared<SDLA::Rendering::SpriteInfo>();
 
     head->fileName = "assets/head440.png";
     head->offset = {0, 0};
@@ -182,17 +176,21 @@ namespace Game {
     shield->area.pos.x = 14;
     shield->area.pos.y = 0;
 
-    std::vector<SDLA::Rendering::SpriteInfo*> character = {body, head, shield};
+    std::vector<std::shared_ptr<SDLA::Rendering::SpriteInfo>> character = {body, head, shield};
 
     {
-      std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> imgG = SDLA::Rendering::Sprite::addImageGroup(window, layer, characterGroup, character);
+      std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> imgG = SDLA::Rendering::Sprite::addImageGroup(window, layer, group, character);
       sprites.push_back(imgG);
     }
 
     Actions::Pairings::character = sprites[0];
   }
 
-  RandoChar::RandoChar(std::string window, int layer) : Npc::Npc(window, layer){
+  RandoChar::RandoChar(std::string window, int layer, SDLA::Vec2 position) : Npc::Npc(window, layer){
+
+    // SDLA::Rendering::SpriteGroup* characterGroup = new SDLA::Rendering::SpriteGroup();
+    group->offset = position;
+
     refresh();
   }
 
@@ -204,16 +202,16 @@ namespace Game {
   }
 
   void RandoChar::refresh(){
-    SDLA::Rendering::SpriteGroup* characterGroup = new SDLA::Rendering::SpriteGroup();
-    characterGroup->offset = {550,400};
+    // SDLA::Rendering::SpriteGroup* characterGroup = new SDLA::Rendering::SpriteGroup();
+    // characterGroup->offset = ;
 
     headNumber = rand() % 33;
     bodyNumber = rand() % 8;
     shieldNumber = rand() % 8;
 
-    SDLA::Rendering::SpriteInfo* head = new SDLA::Rendering::SpriteInfo();
-    SDLA::Rendering::SpriteInfo* body = new SDLA::Rendering::SpriteInfo();
-    SDLA::Rendering::SpriteInfo* shield = new SDLA::Rendering::SpriteInfo();
+    std::shared_ptr<SDLA::Rendering::SpriteInfo> head = std::make_shared<SDLA::Rendering::SpriteInfo>();
+    std::shared_ptr<SDLA::Rendering::SpriteInfo> body = std::make_shared<SDLA::Rendering::SpriteInfo>();
+    std::shared_ptr<SDLA::Rendering::SpriteInfo> shield = std::make_shared<SDLA::Rendering::SpriteInfo>();
 
     head->fileName = "assets/head" + std::to_string(headNumber) + ".png";
     head->offset = {0, 0};
@@ -236,7 +234,7 @@ namespace Game {
     shield->area.pos.x = 14;
     shield->area.pos.y = 0;
 
-    std::vector<SDLA::Rendering::SpriteInfo*> character = {body, head, shield};
+    std::vector<std::shared_ptr<SDLA::Rendering::SpriteInfo>> character = {body, head, shield};
     //   SDLA::Rendering::TextInfo* textInfo = new SDLA::Rendering::TextInfo();
     // textInfo->info = new SDLA::Rendering::SpriteInfo();
     // textInfo->info->offset = {0,400};
@@ -252,7 +250,7 @@ namespace Game {
 
       sprites.push_back(std::vector<std::shared_ptr<SDLA::Rendering::Sprite>>());
     }
-    sprites[0] = SDLA::Rendering::Sprite::addImageGroup(myWindow, layer, characterGroup, character);
+    sprites[0] = SDLA::Rendering::Sprite::addImageGroup(myWindow, layer, group, character);
 
   }
 

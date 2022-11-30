@@ -9,7 +9,7 @@
 #include "input.h"
 
 namespace Menus{
-  std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> createBG9(std::string window, int layer, SDLA::Box sizeInBlocks, SDLA::Rendering::SpriteInfo* bgInfo, SDLA::Rendering::SpriteGroup* groupInfo);
+  std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> createBG9(std::string window, int layer, SDLA::Box sizeInBlocks, SDLA::Rendering::SpriteInfo* bgInfo, SDLA::Rendering::Info* groupInfo);
 }
 
 namespace GameObjects{
@@ -24,6 +24,9 @@ namespace GameObjects{
       std::vector<std::vector<std::shared_ptr<SDLA::Rendering::Sprite>>> sprites = std::vector<std::vector<std::shared_ptr<SDLA::Rendering::Sprite>>>(); 
       std::vector<std::vector<std::shared_ptr<SDLA::Rendering::Text>>>   texts   = std::vector<std::vector<std::shared_ptr<SDLA::Rendering::Text>>>(); 
       SDLA::ID id;
+
+      SDLA::Rendering::Info* group = new SDLA::Rendering::Info(SDLA::Vec2{0,0});
+
       std::string myWindow;
       int layer;
   };

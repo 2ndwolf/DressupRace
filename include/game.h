@@ -5,40 +5,41 @@
 #include <string>
 #include "rendering.h"
 #include "gameobjects.h"
+#include "primitives.h"
 
 namespace Game{
   class HeadsMenu : public GameObjects::Npc {
     public:
     HeadsMenu();
-    HeadsMenu(std::string window, int layer);
+    HeadsMenu(std::string window, int layer, SDLA::Vec2 position);
     ~HeadsMenu(){}
   };
 
   class BodiesMenu: public GameObjects::Npc {
     public:
     BodiesMenu();
-    BodiesMenu(std::string window, int layer);
+    BodiesMenu(std::string window, int layer, SDLA::Vec2 position);
     ~BodiesMenu(){}
   };
 
   class ShieldsMenu: public GameObjects::Npc {
     public:
     ShieldsMenu();
-    ShieldsMenu(std::string window, int layer);
+    ShieldsMenu(std::string window, int layer, SDLA::Vec2 position);
     ~ShieldsMenu(){}
   };
 
   class Character: public GameObjects::Npc {
     public:
     Character();
-    Character(std::string window, int layer);
+    Character(std::string window, int layer, SDLA::Vec2 position);
 
   };
 
   class RandoChar: public GameObjects::Npc {
     public:
     RandoChar();
-    RandoChar(std::string window, int layer);
+    RandoChar(std::string window, int layer, SDLA::Vec2 position);
     void update();
     void refresh();
 
@@ -55,7 +56,7 @@ namespace Game{
 
     SDLA::Rendering::SpriteInfo* info = new SDLA::Rendering::SpriteInfo();
 
-    Tally(std::string window, int layer);
+    Tally(std::string window, int layer, SDLA::Vec2 position);
     void initPoints(std::string window);
     void displayPoints();
   };

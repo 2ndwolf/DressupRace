@@ -4,28 +4,33 @@
 #include <functional>
 #include <memory>
 #include <vector>
-#include "rendering.h"
+#include <string>
+// #include "rendering.h"
+#include "primitives.h"
+#include "information.h"
 #include "identifier.h"
 #include "input.h"
+#include "renderables.h"
 
 namespace Menus{
-  std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> createBG9(std::string window, int layer, SDLA::Box sizeInBlocks, SDLA::Rendering::SpriteInfo* bgInfo, SDLA::Rendering::Info* groupInfo);
+  // std::vector<std::shared_ptr<FK::AT::Sprite>> createBG9(
+  //   std::string window, int layer, FK::Box sizeInTiles, std::string fileName, FK::Box tileSize, std::shared_ptr<FK::AT::Information> group);
 }
 
 namespace GameObjects{
   class Npc {
     public:
       Npc(std::string window, int layer){
-        id = SDLA::Identifier::newID();
+        id = FK::ORE::Identifier::newID();
         this->myWindow = window;
-        this->layer = SDLA::Rendering::getWindow(window)->clampLayerIndex(layer);
+        this->layer = FK::Window::getWindow(window)->clampLayerIndex(layer);
       };
       // ~Npc(){}
-      std::vector<std::vector<std::shared_ptr<SDLA::Rendering::Sprite>>> sprites = std::vector<std::vector<std::shared_ptr<SDLA::Rendering::Sprite>>>(); 
-      std::vector<std::vector<std::shared_ptr<SDLA::Rendering::Text>>>   texts   = std::vector<std::vector<std::shared_ptr<SDLA::Rendering::Text>>>(); 
-      SDLA::ID id;
+      std::vector<std::vector<std::shared_ptr<FK::AT::Sprite>>> sprites = std::vector<std::vector<std::shared_ptr<FK::AT::Sprite>>>(); 
+      std::vector<std::vector<std::shared_ptr<FK::AT::Text>>>   texts   = std::vector<std::vector<std::shared_ptr<FK::AT::Text>>>(); 
+      FK::ID id;
 
-      SDLA::Rendering::Info* group = new SDLA::Rendering::Info(SDLA::Vec2{0,0});
+      std::shared_ptr<FK::AT::SpriteGroup> group = std::make_shared<FK::AT::SpriteGroup>();
 
       std::string myWindow;
       int layer;
@@ -33,19 +38,19 @@ namespace GameObjects{
 
   class Button : Npc{
     public:
-    Button(SDLA::Rendering::SpriteInfo* info, std::string window, int layer) : Npc (window, layer) {
-      this->info = std::shared_ptr<SDLA::Rendering::SpriteInfo>(info);
+    Button(FK::AT::SpriteInformation* information, std::string window, int layer) : Npc (window, layer) {
+      this->information = std::shared_ptr<FK::AT::SpriteInformation>(information);
       if(buttons[window].empty()){
-        buttons[window] = std::vector<std::vector<std::shared_ptr<Button>>>(SDLA::Rendering::getWindow(window)->getLayerCount());
+        buttons[window] = std::vector<std::vector<std::shared_ptr<Button>>>(FK::Window::getWindow(window)->getLayerCount());
       }
     };
-    Button(std::shared_ptr<SDLA::Rendering::SpriteInfo> info, std::string window, int layer) : Npc (window, layer) {
-      this->info = info;
+    Button(std::shared_ptr<FK::AT::SpriteInformation> information, std::string window, int layer) : Npc (window, layer) {
+      this->information = information;
       if(buttons[window].empty()){
-        buttons[window] = std::vector<std::vector<std::shared_ptr<Button>>>(SDLA::Rendering::getWindow(window)->getLayerCount());
+        buttons[window] = std::vector<std::vector<std::shared_ptr<Button>>>(FK::Window::getWindow(window)->getLayerCount());
       }
     };
-    std::shared_ptr<SDLA::Rendering::SpriteInfo> info;
+    std::shared_ptr<FK::AT::SpriteInformation> information;
 
     std::function<void(int)> action;
 
@@ -54,7 +59,7 @@ namespace GameObjects{
     inline static std::map<std::string, std::vector<std::vector<std::shared_ptr<Button>>>> buttons;
 
     static bool searchClick(){
-      for(std::vector<std::shared_ptr<Button>> bV : buttons[SDLA::Rendering::getCurrentWindowName()]){
+      for(std::vector<std::shared_ptr<Button>> bV : buttons[FK::Window::getCurrentWindowName()]){
         for(std::shared_ptr<Button> b : bV){
           if(b->clickInBounds()) {b->action(b->parameter); return true;}
         }
@@ -62,27 +67,33 @@ namespace GameObjects{
       return false;
     };
 
-    // change info->area to getSDLRECT().h/w
+    // change information->area to getSDLRECT().h/w
     bool clickInBounds(){
-      if(info->hidden | info->ownerGroup->hidden) return false;
+      if(information->hidden | information->ownerGroup->hidden) return false;
 
-      SDLA::Vec2 myOffset = SDLA::Rendering::getWindow(myWindow)->getBuffer()[layer]->offset + info->offset;
-      if(info->ownerGroup != nullptr){
-        myOffset = myOffset + info->ownerGroup->offset;
-        std::shared_ptr<SDLA::Rendering::SuperGroup> superGroup = info->ownerGroup->superGroup;
+      Vec2 myOffset = FK::Window::getWindow(myWindow)->getBuffer()[layer].offset + information->offset;
+      if(information->ownerGroup != nullptr){
+        myOffset = myOffset + information->ownerGroup->offset;
+        std::shared_ptr<FK::AT::SuperGroup> superGroup = information->ownerGroup->superGroup;
         while(superGroup != nullptr) {
           if(superGroup->hidden) return false;
-          myOffset = myOffset + superGroup->offset + (info->ignoreCamera ? (SDLA::Vec2){0,0} : superGroup->worldPos);
+          myOffset = myOffset + superGroup->offset + (information->ignoreCamera ? (Vec2){0,0} : superGroup->worldPos);
           superGroup = superGroup->parentGroup;
         }
       }
 
-      if( Input::Mouse::mousePos.x > myOffset.x &&
-          Input::Mouse::mousePos.y > myOffset.y &&
-          Input::Mouse::mousePos.x < myOffset.x + info->area.box.width &&
-          Input::Mouse::mousePos.y < myOffset.y + info->area.box.height) return true;
+      if( FK::Mouse::position.x > myOffset.x &&
+          FK::Mouse::position.y > myOffset.y &&
+          FK::Mouse::position.x < myOffset.x + information->area.box.width &&
+          FK::Mouse::position.y < myOffset.y + information->area.box.height) return true;
       return false;
     };
+  };
+
+  class bG9{
+    public:
+    std::vector<std::shared_ptr<FK::AT::Sprite>> sprites = std::vector<std::shared_ptr<FK::AT::Sprite>>();
+    Box fullSize = {0,0};
   };
 }
 
@@ -90,7 +101,7 @@ namespace GameObjects{
 namespace Actions{
   class Pairings{
     public:
-    inline static std::vector<std::shared_ptr<SDLA::Rendering::Sprite>> character;
+    inline static std::vector<std::shared_ptr<FK::AT::Sprite>> character;
     inline static int head;
     inline static int body;
     inline static int shield;

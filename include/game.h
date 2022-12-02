@@ -3,60 +3,70 @@
 
 #include <memory>
 #include <string>
-#include "rendering.h"
+// #include "rendering.h"
+
+#include "information.h"
 #include "gameobjects.h"
 #include "primitives.h"
+// #include "renderable.h"
+#include "renderables.h"
 
 namespace Game{
   class HeadsMenu : public GameObjects::Npc {
     public:
     HeadsMenu();
-    HeadsMenu(std::string window, int layer, SDLA::Vec2 position);
+    HeadsMenu(std::string window, int layer, Vec2 position);
     ~HeadsMenu(){}
   };
 
   class BodiesMenu: public GameObjects::Npc {
     public:
     BodiesMenu();
-    BodiesMenu(std::string window, int layer, SDLA::Vec2 position);
+    BodiesMenu(std::string window, int layer, Vec2 position);
     ~BodiesMenu(){}
   };
 
   class ShieldsMenu: public GameObjects::Npc {
     public:
     ShieldsMenu();
-    ShieldsMenu(std::string window, int layer, SDLA::Vec2 position);
+    ShieldsMenu(std::string window, int layer, Vec2 position);
     ~ShieldsMenu(){}
   };
 
   class Character: public GameObjects::Npc {
     public:
     Character();
-    Character(std::string window, int layer, SDLA::Vec2 position);
+    Character(std::string window, int layer, Vec2 position);
 
   };
 
   class RandoChar: public GameObjects::Npc {
     public:
     RandoChar();
-    RandoChar(std::string window, int layer, SDLA::Vec2 position);
+    RandoChar(std::string window, int layer, Vec2 position);
     void update();
     void refresh();
 
     int headNumber;
     int bodyNumber;
     int shieldNumber;
+
+    std::shared_ptr<FK::AT::Sprite> head  ;
+    std::shared_ptr<FK::AT::Sprite> body  ;
+    std::shared_ptr<FK::AT::Sprite> shield;
+    
+    int initX;
   };
 
   class Tally : public GameObjects::Npc{
     public:
     inline static int pts = 0;
 
-    std::shared_ptr<SDLA::Rendering::Text> scoreTXT;
+    std::shared_ptr<FK::AT::Text> scoreTXT;
 
-    SDLA::Rendering::SpriteInfo* info = new SDLA::Rendering::SpriteInfo();
+    FK::AT::SpriteInformation* information = new FK::AT::SpriteInformation(std::make_shared<FK::AT::Information>());
 
-    Tally(std::string window, int layer, SDLA::Vec2 position);
+    Tally(std::string window, int layer, Vec2 position);
     void initPoints(std::string window);
     void displayPoints();
   };

@@ -10,11 +10,12 @@ SET(CMAKE_C_FLAGS_RELEASE "-O0")
 # SET(CMAKE_CXX_FLAGS_DEBUG "-fkeep-inline-functions")
 # SET(CMAKE_C_FLAGS_RELEASE "-O0")
 
-# set(CMAKE_BUILD_TYPE Release)
-set(VER_X "1")
-set(VER_Y "0")
-set(VER_Z "0")
-project(${PROJ_NAME})
+project(MTR2_aslib VERSION 1.1.1.31)
+
+configure_file(
+	${PROJECT_SOURCE_DIR}/metadata.txt
+	${PROJECT_BINARY_DIR}/versioninfo.rc
+)
 
 set(STATIC_BUILD FALSE)
 
@@ -57,6 +58,8 @@ target_link_libraries(${PROJ_NAME} MTR)
 
 # execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets/")
 execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/assets/" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets/")
+
 add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-	COMMAND windres ${PROJECT_SOURCE_DIR}/versioninfo.rc -o ${PROJECT_SOURCE_DIR}/versioninfo.o
+  COMMAND windres versioninfo.rc -o versioninfo.o
 	VERBATIM)
+

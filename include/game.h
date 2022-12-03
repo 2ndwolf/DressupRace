@@ -8,8 +8,8 @@
 #include "information.h"
 #include "gameobjects.h"
 #include "primitives.h"
-// #include "renderable.h"
-#include "renderables.h"
+#include "renderable.h"
+// #include "renderables.h"
 
 namespace Game{
   class HeadsMenu : public GameObjects::Npc {
@@ -51,9 +51,9 @@ namespace Game{
     int bodyNumber;
     int shieldNumber;
 
-    std::shared_ptr<FK::AT::Sprite> head  ;
-    std::shared_ptr<FK::AT::Sprite> body  ;
-    std::shared_ptr<FK::AT::Sprite> shield;
+    std::shared_ptr<FK::ORE::Renderable> head  ;
+    std::shared_ptr<FK::ORE::Renderable> body  ;
+    std::shared_ptr<FK::ORE::Renderable> shield;
     
     int initX;
   };

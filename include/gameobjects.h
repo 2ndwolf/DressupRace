@@ -26,11 +26,11 @@ namespace GameObjects{
         this->layer = FK::Window::getWindow(window)->clampLayerIndex(layer);
       };
       // ~Npc(){}
-      std::vector<std::vector<std::shared_ptr<FK::AT::Sprite>>> sprites = std::vector<std::vector<std::shared_ptr<FK::AT::Sprite>>>(); 
+      std::vector<std::shared_ptr<FK::AT::SpriteGroup>>  spriteGroups   = std::vector<std::shared_ptr<FK::AT::SpriteGroup>>();
       std::vector<std::vector<std::shared_ptr<FK::AT::Text>>>   texts   = std::vector<std::vector<std::shared_ptr<FK::AT::Text>>>(); 
       FK::ID id;
 
-      std::shared_ptr<FK::AT::SpriteGroup> group = std::make_shared<FK::AT::SpriteGroup>();
+      // std::shared_ptr<FK::AT::SpriteGroup> group = std::make_shared<FK::AT::SpriteGroup>();
 
       std::string myWindow;
       int layer;
@@ -38,19 +38,19 @@ namespace GameObjects{
 
   class Button : Npc{
     public:
-    Button(FK::AT::SpriteInformation* information, std::string window, int layer) : Npc (window, layer) {
-      this->information = std::shared_ptr<FK::AT::SpriteInformation>(information);
+    Button(std::shared_ptr<FK::AT::SpriteInformation> sprite, std::string window, int layer) : Npc (window, layer) {
+      this->sprite = sprite;
       if(buttons[window].empty()){
         buttons[window] = std::vector<std::vector<std::shared_ptr<Button>>>(FK::Window::getWindow(window)->getLayerCount());
       }
     };
-    Button(std::shared_ptr<FK::AT::SpriteInformation> information, std::string window, int layer) : Npc (window, layer) {
-      this->information = information;
-      if(buttons[window].empty()){
-        buttons[window] = std::vector<std::vector<std::shared_ptr<Button>>>(FK::Window::getWindow(window)->getLayerCount());
-      }
-    };
-    std::shared_ptr<FK::AT::SpriteInformation> information;
+    // Button(std::shared_ptr<FK::AT::SpriteInformation> information, std::string window, int layer) : Npc (window, layer) {
+    //   this->information = information;
+    //   if(buttons[window].empty()){
+    //     buttons[window] = std::vector<std::vector<std::shared_ptr<Button>>>(FK::Window::getWindow(window)->getLayerCount());
+    //   }
+    // };
+    std::shared_ptr<FK::AT::SpriteInformation> spriteInformation;
 
     std::function<void(int)> action;
 
@@ -69,30 +69,31 @@ namespace GameObjects{
 
     // change information->area to getSDLRECT().h/w
     bool clickInBounds(){
-      if(information->hidden | information->ownerGroup->hidden) return false;
+      FK::AT::SpriteInformation& information = *spriteInformation;
+      if(information.hidden | information.ownerGroup->hidden) return false;
 
-      Vec2 myOffset = FK::Window::getWindow(myWindow)->getBuffer()[layer].offset + information->offset;
-      if(information->ownerGroup != nullptr){
-        myOffset = myOffset + information->ownerGroup->offset;
-        std::shared_ptr<FK::AT::SuperGroup> superGroup = information->ownerGroup->superGroup;
+      Vec2 myOffset = FK::Window::getWindow(myWindow)->getBuffer()[layer].offset + information.offset;
+      if(information.ownerGroup != nullptr){
+        myOffset = myOffset + information.ownerGroup->offset;
+        std::shared_ptr<FK::AT::SuperGroup> superGroup = information.ownerGroup->superGroup;
         while(superGroup != nullptr) {
           if(superGroup->hidden) return false;
-          myOffset = myOffset + superGroup->offset + (information->ignoreCamera ? (Vec2){0,0} : superGroup->worldPos);
+          myOffset = myOffset + superGroup->offset + (information.ignoreCamera ? (Vec2){0,0} : information.ownerGroup->worldPos - FK::Window::getWindow(sprite->myWindow)->camPos);
           superGroup = superGroup->parentGroup;
         }
       }
 
       if( FK::Mouse::position.x > myOffset.x &&
           FK::Mouse::position.y > myOffset.y &&
-          FK::Mouse::position.x < myOffset.x + information->area.box.width &&
-          FK::Mouse::position.y < myOffset.y + information->area.box.height) return true;
+          FK::Mouse::position.x < myOffset.x + information.area.box.width &&
+          FK::Mouse::position.y < myOffset.y + information.area.box.height) return true;
       return false;
     };
   };
 
   class bG9{
     public:
-    std::vector<std::shared_ptr<FK::AT::Sprite>> sprites = std::vector<std::shared_ptr<FK::AT::Sprite>>();
+    std::shared_ptr<FK::AT::SpriteGroup> spriteGroup = std::shared_ptr<FK::AT::SpriteGroup>();
     Box fullSize = {0,0};
   };
 }
@@ -101,7 +102,7 @@ namespace GameObjects{
 namespace Actions{
   class Pairings{
     public:
-    inline static std::vector<std::shared_ptr<FK::AT::Sprite>> character;
+    inline static std::shared_ptr<FK::AT::SpriteGroup> character;
     inline static int head;
     inline static int body;
     inline static int shield;

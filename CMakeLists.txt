@@ -11,11 +11,8 @@ SET(CMAKE_C_FLAGS_RELEASE "-O0")
 # SET(CMAKE_C_FLAGS_RELEASE "-O0")
 
 project(MTR2_aslib VERSION 1.1.1.31)
+message(STATUS "---- ${CMAKE_BUILD_TYPE}")
 
-configure_file(
-	${PROJECT_SOURCE_DIR}/metadata.txt
-	${PROJECT_BINARY_DIR}/versioninfo.rc
-)
 
 set(STATIC_BUILD FALSE)
 
@@ -26,6 +23,15 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 4)
 elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 		set(architecture x86_64)
 endif()
+
+configure_file(
+	${PROJECT_SOURCE_DIR}/metadata.txt
+	${PROJECT_BINARY_DIR}/versioninfo.rc
+)
+configure_file(
+	${PROJECT_SOURCE_DIR}/run.txt
+	${PROJECT_BINARY_DIR}/run.bat
+)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin${CMAKE_BUILD_TYPE}_${architecture})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin${CMAKE_BUILD_TYPE}_${architecture})

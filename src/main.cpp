@@ -57,12 +57,12 @@ int WinMain(int argc, char *argv[]) {
   int angle = 0;
   int angle2 = 0;
 
-  Vec2 origin = zeMe.sprites[0][0]->ownerGroup->offset;
-  for(std::shared_ptr<FK::AT::Sprite> s : zeMe.sprites[0]){
-    s->getAngleFromGroup = true;
-  }
+  Vec2 origin = zeMe.spriteGroups[0]->offset;
+  // for(std::shared_ptr<FK::AT::Sprite> s : zeMe.sprites[0]){
+  //   s->getAngleFromGroup = true;
+  // }
 
-  FK::AT::setGroupAsRotationCenter(zeMe.sprites[0][0]->ownerGroup);
+  FK::AT::setGroupAsRotationCenter(zeMe.spriteGroups[0]);
 
   while(!close){
 
@@ -77,8 +77,8 @@ int WinMain(int argc, char *argv[]) {
               // for(std::shared_ptr<SDLA::Rendering::Sprite> s : headsMENU.sprites[1]){
     angle+=1;
     angle2-=1;
-    zeMe.sprites[0][0]->ownerGroup->offset = rotatePoint({250,250}, angle, origin);
-    zeMe.sprites[0][0]->ownerGroup->angle = angle2;
+    zeMe.spriteGroups[0]->offset = rotatePoint({250,250}, angle, origin);
+    zeMe.spriteGroups[0]->angle = angle2;
 
                 // s->information->angle += 1;
                 // SDL_Delay(16);
@@ -108,7 +108,7 @@ int WinMain(int argc, char *argv[]) {
     }
     
     SDL_Delay(16); 
-  };
+  }; 
 
 
   return FK_Close();

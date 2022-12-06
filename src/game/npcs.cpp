@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <string>
 
-#include "primitives.h"
+#include "TSRPrimitives.h"
 #include "identifier.h"
 #include "information.h"
 #include "AT.h"
@@ -15,14 +15,14 @@ namespace Game {
 
   GameObjects::bG9 createBG9(
     std::string window, int layer, Box sizeInTiles, std::string fileName, Box tileSize, std::shared_ptr<FK::AT::Information> group, Vec2 spriteOffset = {0,0}){
-    
+    // menuElement->bounds.pos.y;
     // Box spriteSize = {tileSize.width/3, tileSize.height/3};
 
     // + spriteOffset + (tileSize*tilePos)
 
     // FK::Bounds area;
     // area.box =
-    std::shared_ptr<FK::AT::SpriteInformation> menuInformation = std::make_shared<FK::AT::SpriteInformation>();
+    std::shared_ptr<FK::AT::SpriteInformation> menuInformation = std::make_shared<FK::AT::SpriteInformation>(std::make_shared<FK::AT::Information>(window));
     menuInformation->fileName = fileName;
     menuInformation->area.box = tileSize;
     // Box hMenuSize = sizeInTiles;
@@ -36,7 +36,7 @@ namespace Game {
         menuElement->fileName = fileName;
         menuElement->area.box.width = tileSize.width;
         menuElement->area.box.height = tileSize.height;
-        menuElement->offset.y = tileSize.height * y;
+        menuElement->bounds.pos.y = tileSize.height * y;
 
         if(y == 0){
           menuElement->area.pos.y = spriteOffset.y + 0;
@@ -46,7 +46,7 @@ namespace Game {
           menuElement->area.pos.y = spriteOffset.y + tileSize.height;
         }
 
-        menuElement->offset.x = tileSize.width * x;
+        menuElement->bounds.pos.x = tileSize.width * x;
 
         if(x == 0){
           menuElement->area.pos.x = spriteOffset.x + 0;
@@ -70,17 +70,18 @@ namespace Game {
   HeadsMenu::HeadsMenu(std::string window, int layer, Vec2 position) : Npc::Npc(window, layer){
 
     // group->offset = position;
-    GameObjects::bG9 background = createBG9(window, layer, {30,9}, "assets/menubg.png", {16,16},  std::make_shared<FK::AT::Information>(position));
+    GameObjects::bG9 background = createBG9(window, layer, {30,9}, "assets/menubg.png", {16,16},  std::make_shared<FK::AT::Information>(window, Bounds{{position},{0,0}}));
     spriteGroups.push_back(background.spriteGroup);
 
 
     Box gridSize = {11,3};
     int spacing = 8;
 
-    std::shared_ptr<FK::AT::SpriteGroup> innerGroup = std::make_shared<FK::AT::SpriteGroup>(std::make_shared<FK::AT::Information>(Vec2{
-      (background.fullSize.width -  (gridSize.width  * 32 + spacing * (gridSize.width  - 1))) / 2 + background.spriteGroup->offset.x,
-      (background.fullSize.height - (gridSize.height * 32 + spacing * (gridSize.height - 1))) / 2 + background.spriteGroup->offset.y,
-    }));
+    std::shared_ptr<FK::AT::SpriteGroup> innerGroup = std::make_shared<FK::AT::SpriteGroup>(std::make_shared<FK::AT::Information>(window,
+      Bounds{{
+      (background.fullSize.width -  (gridSize.width  * 32 + spacing * (gridSize.width  - 1))) / 2 + background.spriteGroup->bounds.pos.x,
+      (background.fullSize.height - (gridSize.height * 32 + spacing * (gridSize.height - 1))) / 2 + background.spriteGroup->bounds.pos.y,
+    },{0,0}}));
 
     // innerGroup->superGroup = background.spriteGroup->superGroup = std::make_shared<FK::AT::SuperGroup>();
 
@@ -88,10 +89,10 @@ namespace Game {
     std::vector<std::shared_ptr<FK::AT::SpriteInformation>> images;
     for(int y = 0; y < gridSize.height; y++){
       for(int x = 0; x < gridSize.width; x++){
-        std::shared_ptr<FK::AT::SpriteInformation> image = std::make_shared<FK::AT::SpriteInformation>();
+        std::shared_ptr<FK::AT::SpriteInformation> image = std::make_shared<FK::AT::SpriteInformation>(std::make_shared<FK::AT::Information>(window));
         image->ownerGroup = innerGroup;
         image->fileName = "assets/head" + std::to_string(i) + ".png";
-        image->offset = {x * (32 + spacing), y * (32 + spacing)};
+        image->bounds.pos = {x * (32 + spacing), y * (32 + spacing)};
         image->area.box.width = 32;
         image->area.box.height = 32;
         image->area.pos.x = 0;
@@ -118,25 +119,26 @@ namespace Game {
   BodiesMenu::BodiesMenu(std::string window, int layer, Vec2 position) : Npc::Npc(window, layer){
 
     // group->offset = position;
-    GameObjects::bG9 background = createBG9(window, layer, {7,11},"assets/menubg.png", {16,16},  std::make_shared<FK::AT::Information>(position));
+    GameObjects::bG9 background = createBG9(window, layer, {7,11},"assets/menubg.png", {16,16},  std::make_shared<FK::AT::Information>(window, Bounds{{position},{0,0}}));
     spriteGroups.push_back(background.spriteGroup);
 
     Box gridSize = {2,4};
     int spacing = 8;
 
-    std::shared_ptr<FK::AT::SpriteGroup> innerGroup = std::make_shared<FK::AT::SpriteGroup>(std::make_shared<FK::AT::Information>(Vec2{
-      (background.fullSize.width -  (gridSize.width  * 32 + spacing * (gridSize.width  - 1))) / 2 + background.spriteGroup->offset.x,
-      (background.fullSize.height - (gridSize.height * 32 + spacing * (gridSize.height - 1))) / 2 + background.spriteGroup->offset.y,
-    }));
+    std::shared_ptr<FK::AT::SpriteGroup> innerGroup = std::make_shared<FK::AT::SpriteGroup>(std::make_shared<FK::AT::Information>(window,
+      Bounds{{
+      (background.fullSize.width -  (gridSize.width  * 32 + spacing * (gridSize.width  - 1))) / 2 + background.spriteGroup->bounds.pos.x,
+      (background.fullSize.height - (gridSize.height * 32 + spacing * (gridSize.height - 1))) / 2 + background.spriteGroup->bounds.pos.y,
+    },{0,0}}));
 
     int i = 0;
     std::vector<std::shared_ptr<FK::AT::SpriteInformation>> images;
     for(int y = 0; y < gridSize.height; y++){
       for(int x = 0; x < gridSize.width; x++){
-        std::shared_ptr<FK::AT::SpriteInformation> image = std::make_shared<FK::AT::SpriteInformation>();
+        std::shared_ptr<FK::AT::SpriteInformation> image = std::make_shared<FK::AT::SpriteInformation>(std::make_shared<FK::AT::Information>(window));
         image->ownerGroup = innerGroup;
         image->fileName = "assets/body" + std::to_string(i) + ".png";
-        image->offset = {x * (32 + spacing), y * (32 + spacing)};
+        image->bounds.pos = {x * (32 + spacing), y * (32 + spacing)};
         image->area.box.width = 32;
         image->area.box.height = 32;
         image->area.pos.x = 64;
@@ -162,25 +164,26 @@ namespace Game {
 
   ShieldsMenu::ShieldsMenu(std::string window, int layer, Vec2 position) : Npc::Npc(window, layer){
 
-    GameObjects::bG9 background = createBG9(window, layer, {7,11},"assets/menubg.png", {16,16},  std::make_shared<FK::AT::Information>(position));
+    GameObjects::bG9 background = createBG9(window, layer, {7,11},"assets/menubg.png", {16,16},  std::make_shared<FK::AT::Information>(window, Bounds{{position},{0,0}}));
     spriteGroups.push_back(background.spriteGroup);
 
     Box gridSize = {2,4};
     int spacing = 8;
 
-    std::shared_ptr<FK::AT::SpriteGroup> innerGroup = std::make_shared<FK::AT::SpriteGroup>(std::make_shared<FK::AT::Information>(Vec2{
-      (background.fullSize.width -  (gridSize.width  * 32 + spacing * (gridSize.width  - 1))) / 2 + background.spriteGroup->offset.x,
-      (background.fullSize.height - (gridSize.height * 32 + spacing * (gridSize.height - 1))) / 2 + background.spriteGroup->offset.y,
-    }));
+    std::shared_ptr<FK::AT::SpriteGroup> innerGroup = std::make_shared<FK::AT::SpriteGroup>(std::make_shared<FK::AT::Information>(window,
+      Bounds{{
+      (background.fullSize.width -  (gridSize.width  * 32 + spacing * (gridSize.width  - 1))) / 2 + background.spriteGroup->bounds.pos.x,
+      (background.fullSize.height - (gridSize.height * 32 + spacing * (gridSize.height - 1))) / 2 + background.spriteGroup->bounds.pos.y,
+    },{0,0}}));
 
     int i = 0;
     std::vector<std::shared_ptr<FK::AT::SpriteInformation>> images;
     for(int y = 0; y < gridSize.height; y++){
       for(int x = 0; x < gridSize.width; x++){
-        std::shared_ptr<FK::AT::SpriteInformation> image = std::make_shared<FK::AT::SpriteInformation>();
+        std::shared_ptr<FK::AT::SpriteInformation> image = std::make_shared<FK::AT::SpriteInformation>(std::make_shared<FK::AT::Information>(window));
         image->ownerGroup = innerGroup;
         image->fileName = "assets/shield" + std::to_string(i) + ".png";
-        image->offset = {x * (32 + spacing), y * (32 + spacing)};
+        image->bounds.pos = {x * (32 + spacing), y * (32 + spacing)};
         image->area.box.width = 16;
         image->area.box.height = 30;
         image->area.pos.x = 14;
@@ -209,26 +212,26 @@ namespace Game {
 
     // group->offset = position;
 
-    std::shared_ptr<FK::AT::SpriteInformation> head = std::make_shared<FK::AT::SpriteInformation>();
-    std::shared_ptr<FK::AT::SpriteInformation> body = std::make_shared<FK::AT::SpriteInformation>();
-    std::shared_ptr<FK::AT::SpriteInformation> shield = std::make_shared<FK::AT::SpriteInformation>();
+    std::shared_ptr<FK::AT::SpriteInformation> head = std::make_shared<FK::AT::SpriteInformation>(std::make_shared<FK::AT::Information>(window));
+    std::shared_ptr<FK::AT::SpriteInformation> body = std::make_shared<FK::AT::SpriteInformation>(std::make_shared<FK::AT::Information>(window));
+    std::shared_ptr<FK::AT::SpriteInformation> shield = std::make_shared<FK::AT::SpriteInformation>(std::make_shared<FK::AT::Information>(window));
 
     head->fileName = "assets/head0.png";
-    head->offset = {0, 0};
+    head->bounds.pos = {0, 0};
     head->area.box.width = 32;
     head->area.box.height = 32;
     head->area.pos.x = 0;
     head->area.pos.y = 64;
 
     body->fileName = "assets/body0.png";
-    body->offset = {0, 16};
+    body->bounds.pos = {0, 16};
     body->area.box.width = 32;
     body->area.box.height = 32;
     body->area.pos.x = 64;
     body->area.pos.y = 0;
 
     shield->fileName = "assets/shield2.png";
-    shield->offset = {-3, 20};
+    shield->bounds.pos = {-3, 20};
     shield->area.box.width = 16;
     shield->area.box.height = 20;
     shield->area.pos.x = 14;
@@ -237,7 +240,9 @@ namespace Game {
     std::vector<std::shared_ptr<FK::AT::SpriteInformation>> character = {body, head, shield};
 
     {
-      std::shared_ptr<FK::AT::SpriteGroup> imgG = FK::AT::addSpriteGroup(window, layer, std::make_shared<FK::AT::SpriteGroup>(std::make_shared<FK::AT::Information>(position)), character);
+      std::shared_ptr<FK::AT::SpriteGroup> imgG = FK::AT::addSpriteGroup(window, layer, std::make_shared<FK::AT::SpriteGroup>(
+        // window,
+        std::make_shared<FK::AT::Information>(window, Bounds{{position},{32,32 }})), character);
       spriteGroups.push_back(imgG);
     }
 
@@ -254,26 +259,26 @@ namespace Game {
     bodyNumber = rand() % 8;
     shieldNumber = rand() % 8;
 
-    std::shared_ptr<FK::AT::SpriteInformation> headInformation   = std::make_shared<FK::AT::SpriteInformation>();
-    std::shared_ptr<FK::AT::SpriteInformation> bodyInformation   = std::make_shared<FK::AT::SpriteInformation>();
-    std::shared_ptr<FK::AT::SpriteInformation> shieldInformation = std::make_shared<FK::AT::SpriteInformation>();
+    std::shared_ptr<FK::AT::SpriteInformation> headInformation   = std::make_shared<FK::AT::SpriteInformation>(std::make_shared<FK::AT::Information>(window));
+    std::shared_ptr<FK::AT::SpriteInformation> bodyInformation   = std::make_shared<FK::AT::SpriteInformation>(std::make_shared<FK::AT::Information>(window));
+    std::shared_ptr<FK::AT::SpriteInformation> shieldInformation = std::make_shared<FK::AT::SpriteInformation>(std::make_shared<FK::AT::Information>(window));
 
     headInformation->fileName = "assets/head" + std::to_string(headNumber) + ".png";
-    headInformation->offset = {0, 0};
+    headInformation->bounds.pos = {0, 0};
     headInformation->area.box.width = 32;
     headInformation->area.box.height = 32;
     headInformation->area.pos.x = 0;
     headInformation->area.pos.y = 64;
 
     bodyInformation->fileName = "assets/body" + std::to_string(bodyNumber) + ".png";
-    bodyInformation->offset = {0, 16};
+    bodyInformation->bounds.pos = {0, 16};
     bodyInformation->area.box.width = 32;
     bodyInformation->area.box.height = 32;
     bodyInformation->area.pos.x = 64;
     bodyInformation->area.pos.y = 0;
 
     shieldInformation->fileName = "assets/shield" + std::to_string(shieldNumber) + ".png";
-    shieldInformation->offset = {-3, 20};
+    shieldInformation->bounds.pos = {-3, 20};
     shieldInformation->area.box.width = 16;
     shieldInformation->area.box.height = 20;
     shieldInformation->area.pos.x = 14;
@@ -281,16 +286,16 @@ namespace Game {
 
     std::vector<std::shared_ptr<FK::AT::SpriteInformation>> character = {bodyInformation, headInformation, shieldInformation};
 
-    spriteGroups.push_back(FK::AT::addSpriteGroup(myWindow, layer, std::make_shared<FK::AT::Information>(position), character));
+    spriteGroups.push_back(FK::AT::addSpriteGroup(myWindow, layer, std::make_shared<FK::AT::Information>(window, Bounds{{position},{0,0}}), character));
     // spriteGroups[0] = ;
-    body = spriteGroups[0]->sprites[0];
-    head = spriteGroups[0]->sprites[1];
+    body   = spriteGroups[0]->sprites[0];
+    head   = spriteGroups[0]->sprites[1];
     shield = spriteGroups[0]->sprites[2];
   }
 
   void RandoChar::update(){
-    spriteGroups[0]->offset.x -= 1;
-    if(spriteGroups[0]->offset.x < -64){
+    spriteGroups[0]->bounds.pos.x -= 1;
+    if(spriteGroups[0]->bounds.pos.x < -64){
       refresh();
     }
   }
@@ -299,14 +304,14 @@ namespace Game {
     // FK::AT::SpriteGroup* characterGroup = new FK::AT::SpriteGroup();
     // characterGroup->offset = ;
 
-    spriteGroups[0]->offset.x = initX;
+    spriteGroups[0]->bounds.pos.x = initX;
 
     headNumber = rand() % 33;
     bodyNumber = rand() % 8;
     shieldNumber = rand() % 8;
 
-    head->changeSurface("assets/head" + std::to_string(headNumber) + ".png");
-    body->changeSurface("assets/body" + std::to_string(bodyNumber) + ".png");
+    head  ->changeSurface("assets/head" + std::to_string(headNumber) + ".png");
+    body  ->changeSurface("assets/body" + std::to_string(bodyNumber) + ".png");
     shield->changeSurface("assets/shield" + std::to_string(shieldNumber) + ".png");
   }
 

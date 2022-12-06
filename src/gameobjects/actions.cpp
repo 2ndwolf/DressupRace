@@ -1,6 +1,7 @@
 #include <SDL.h>
 
 #include "gameobjects.h"
+#include "information.h"
 
 namespace Actions{
   void setHead(int number){

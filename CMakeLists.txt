@@ -16,7 +16,7 @@ message(STATUS "---- ${CMAKE_BUILD_TYPE}")
 
 set(STATIC_BUILD FALSE)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 4)
 		set(architecture i686-w64)

@@ -7,7 +7,7 @@
 
 #include "information.h"
 #include "gameobjects.h"
-#include "primitives.h"
+#include "TSRPrimitives.h"
 #include "renderable.h"
 // #include "renderables.h"
 

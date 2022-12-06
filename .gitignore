@@ -6,4 +6,6 @@
 !CMakeLists.txt
 !.gitignore
 !readme.md
+!ini
+!ini/uPref.ini
 # !versioninfo.rc

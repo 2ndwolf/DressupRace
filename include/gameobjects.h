@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 // #include "rendering.h"
-#include "primitives.h"
+#include "TSRPrimitives.h"
 #include "information.h"
 #include "identifier.h"
 #include "input.h"
@@ -14,7 +14,7 @@
 
 namespace Menus{
   // std::vector<std::shared_ptr<FK::AT::Sprite>> createBG9(
-  //   std::string window, int layer, FK::Box sizeInTiles, std::string fileName, FK::Box tileSize, std::shared_ptr<FK::AT::Information> group);
+  //   std::string window, int layer, FK::BoxPTR sizeInTiles, std::string fileName, FK::BoxPTR tileSize, std::shared_ptr<FK::AT::Information> group);
 }
 
 namespace GameObjects{
@@ -39,10 +39,10 @@ namespace GameObjects{
   class Button : Npc{
     public:
     Button(std::shared_ptr<FK::AT::SpriteInformation> sprite, std::string window, int layer) : Npc (window, layer) {
-      this->sprite = sprite;
-      if(buttons[window].empty()){
-        buttons[window] = std::vector<std::vector<std::shared_ptr<Button>>>(FK::Window::getWindow(window)->getLayerCount());
-      }
+      // this->sprite = sprite;
+      // if(buttons[window].empty()){
+      //   buttons[window] = std::vector<std::vector<std::shared_ptr<Button>>>(FK::Window::getWindow(window)->getLayerCount());
+      // }
     };
     // Button(std::shared_ptr<FK::AT::SpriteInformation> information, std::string window, int layer) : Npc (window, layer) {
     //   this->information = information;
@@ -72,14 +72,14 @@ namespace GameObjects{
       FK::AT::SpriteInformation& information = *spriteInformation;
       if(information.hidden | information.ownerGroup->hidden) return false;
 
-      Vec2 myOffset = FK::Window::getWindow(myWindow)->getBuffer()[layer].offset + information.offset;
+      Vec2 myOffset = FK::Window::getWindow(myWindow)->getBuffer()[layer].offset + information.bounds.pos;
       if(information.ownerGroup != nullptr){
-        myOffset = myOffset + information.ownerGroup->offset;
+        myOffset = myOffset + information.ownerGroup->bounds.pos;
         std::shared_ptr<FK::AT::SuperGroup> superGroup = information.ownerGroup->superGroup;
         while(superGroup != nullptr) {
           if(superGroup->hidden) return false;
-          myOffset = myOffset + superGroup->offset + (information.ignoreCamera ? (Vec2){0,0} : information.ownerGroup->worldPos - FK::Window::getWindow(sprite->myWindow)->camPos);
-          superGroup = superGroup->parentGroup;
+          // myOffset = myOffset + superGroup->offset + (information.ignoreCamera ? (Vec2){0,0} : information.ownerGroup->worldPos - FK::Window::getWindow(sprite->myWindow)->camPos);
+          superGroup = superGroup->superGroup;
         }
       }
 

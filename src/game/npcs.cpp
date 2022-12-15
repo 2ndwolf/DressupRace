@@ -2,118 +2,139 @@
 #include <cstdlib>
 #include <string>
 
-#include "primitives.h"
-#include "identifier.h"
-#include "information.h"
-#include "AT.h"
+// #include "primitives.h"
+// #include "identifier.h"
+// #include "information.h"
+// #include "AT.h"
 
-#include "gameobjects.h"
+// #include "gameobjects.h"
+// 
+// #include "_MTR.h"
+#include "image.h"
+#include "primitives.h"
+#include "spriteGroup.h"
+#include "INST.h"
 #include "game.h"
 
 
 namespace Game {
 
-  GameObjects::bG9 createBG9(
-    std::string window, int layer, Box sizeInTiles, std::string fileName, Box tileSize, std::shared_ptr<FK::AT::Information> group, Vec2 spriteOffset = {0,0}){
-    
-    // Box spriteSize = {tileSize.width/3, tileSize.height/3};
+  Character::Character(std::vector<std::string> windows, int layer, Vec2 position) : Npc::Npc(windows, layer, position){
 
-    // + spriteOffset + (tileSize*tilePos)
+    MTR::RND::Image* head   = (MTR::createSprite("assets/head440.png", windows, { 0,64,32,32}, { 0, 0}, 0));
+    MTR::RND::Image* body   = (MTR::createSprite("assets/body0.png"  , windows, {64, 0,32,32}, { 0,16}, 0));
+    MTR::RND::Image* shield = (MTR::createSprite("assets/shield2.png", windows, {14, 0,16,20}, {-3,20}, 0));
 
-    // FK::Bounds area;
-    // area.box =
-    std::shared_ptr<FK::AT::SpriteInformation> menuInformation = std::make_shared<FK::AT::SpriteInformation>();
-    menuInformation->fileName = fileName;
-    menuInformation->area.box = tileSize;
-    // Box hMenuSize = sizeInTiles;
+    head  ->angleFrSuper = true;
+    body  ->angleFrSuper = true;
+    shield->angleFrSuper = true;
 
-    std::vector<std::shared_ptr<FK::AT::SpriteInformation>> menuBackground;
-    // SDLA::Box tileSize = (SDLA::Box) {bgInformation->area.box.width, bgInformation->area.box.height};
+    std::vector<MTR::RND::Image*> character = {
+    body,
+    head, 
+    shield
+    };
+    MTR::RND::SpriteGroup* spG = new MTR::RND::SpriteGroup{windows};
+    spG->bounds.pos.x = 0;
+    spG->bounds.pos.y = 0;
 
-    for(int y = 0; y < sizeInTiles.height; y++){
-      for(int x = 0; x < sizeInTiles.width; x++){
-        std::shared_ptr<FK::AT::SpriteInformation> menuElement = std::make_shared<FK::AT::SpriteInformation>(menuInformation);
-        menuElement->fileName = fileName;
-        menuElement->area.box.width = tileSize.width;
-        menuElement->area.box.height = tileSize.height;
-        menuElement->offset.y = tileSize.height * y;
+    Character::spriteGroups.push_back(spG);
 
-        if(y == 0){
-          menuElement->area.pos.y = spriteOffset.y + 0;
-        } else if (y == sizeInTiles.height - 1){
-          menuElement->area.pos.y = spriteOffset.y + tileSize.height * 2;
-        } else {
-          menuElement->area.pos.y = spriteOffset.y + tileSize.height;
-        }
+    MTR::RND::Image::group(spG, character);
 
-        menuElement->offset.x = tileSize.width * x;
+    spG->update(spG);
 
-        if(x == 0){
-          menuElement->area.pos.x = spriteOffset.x + 0;
-        } else if (x == sizeInTiles.width - 1){
-          menuElement->area.pos.x = spriteOffset.x + tileSize.width * 2;
-        } else {
-          menuElement->area.pos.x = spriteOffset.x + tileSize.width;
-        }
-
-        menuBackground.push_back(menuElement);
-      }
-    }
-    GameObjects::bG9 bg9 = GameObjects::bG9();
-    bg9.fullSize = {tileSize.width * sizeInTiles.width, tileSize.height * sizeInTiles.height};
-    bg9.spriteGroup = FK::AT::addSpriteGroup(window, layer, group, menuBackground);
-    return bg9;
-
-    // return Menus::createBG9(window, layer, hMenuSize, menuBackground, group);
   }
 
-  HeadsMenu::HeadsMenu(std::string window, int layer, Vec2 position) : Npc::Npc(window, layer){
+  HeadsMenu::HeadsMenu(std::vector<std::string> windows, int layer, Vec2 position) : Npc::Npc(windows, layer, position){
 
-    // group->offset = position;
-    GameObjects::bG9 background = createBG9(window, layer, {30,9}, "assets/menubg.png", {16,16},  std::make_shared<FK::AT::Information>(position));
-    spriteGroups.push_back(background.spriteGroup);
-
+    GameObjects::BG9* background = 
+    new GameObjects::BG9(windows, 0, {10,10});
+    background->build("assets/menubg.png", {30,9});
 
     Box gridSize = {11,3};
     int spacing = 8;
 
-    std::shared_ptr<FK::AT::SpriteGroup> innerGroup = std::make_shared<FK::AT::SpriteGroup>(std::make_shared<FK::AT::Information>(Vec2{
-      (background.fullSize.width -  (gridSize.width  * 32 + spacing * (gridSize.width  - 1))) / 2 + background.spriteGroup->offset.x,
-      (background.fullSize.height - (gridSize.height * 32 + spacing * (gridSize.height - 1))) / 2 + background.spriteGroup->offset.y,
-    }));
-
+    spriteGroups[0]->bounds.pos.x += (background->fullSize.width  - (gridSize.width  * 32 + spacing * (gridSize.width  - 1))) / 2 + background->spriteGroups[0]->bounds.pos.x;
+    spriteGroups[0]->bounds.pos.y += (background->fullSize.height - (gridSize.height * 32 + spacing * (gridSize.height - 1))) / 2 + background->spriteGroups[0]->bounds.pos.y;
+    // HeadsMenu::spriteGroups.push_back(innerGroup);
     // innerGroup->superGroup = background.spriteGroup->superGroup = std::make_shared<FK::AT::SuperGroup>();
 
     int i = 0;
-    std::vector<std::shared_ptr<FK::AT::SpriteInformation>> images;
+    std::vector<MTR::RND::Image*> images;
     for(int y = 0; y < gridSize.height; y++){
       for(int x = 0; x < gridSize.width; x++){
-        std::shared_ptr<FK::AT::SpriteInformation> image = std::make_shared<FK::AT::SpriteInformation>();
-        image->ownerGroup = innerGroup;
-        image->fileName = "assets/head" + std::to_string(i) + ".png";
-        image->offset = {x * (32 + spacing), y * (32 + spacing)};
-        image->area.box.width = 32;
-        image->area.box.height = 32;
-        image->area.pos.x = 0;
-        image->area.pos.y = 64;
-        images.push_back(image);
+        images.push_back(
+        MTR::createSprite("assets/head" + std::to_string(i) + ".png", windows,
+        {0, 64, 32, 32}, {x * ( 32 + spacing), y * (32 + spacing)}, 0)
+        );
 
 
-        // if(GameObjects::Button::buttons[window].empty()) GameObjects::Button::buttons.insert({window,std::vector<std::shared_ptr<GameObjects::Button>>()});
-        std::shared_ptr<GameObjects::Button> button = std::make_shared<GameObjects::Button>(image, window, layer);
-        button->action = Actions::setHead;
-        button->parameter = i;
-        GameObjects::Button::buttons[window][layer].push_back(button);
+        // std::shared_ptr<GameObjects::Button> button = std::make_shared<GameObjects::Button>(image, window, layer);
+        // button->action = Actions::setHead;
+        // button->parameter = i;
+        // GameObjects::Button::buttons[window][layer].push_back(button);
 
         i++;
       }
     }
 
-    {
-      std::shared_ptr<FK::AT::SpriteGroup> imgG = FK::AT::addSpriteGroup(window, layer, innerGroup, images);
-      spriteGroups.push_back(imgG);
-    }
+    MTR::RND::Image::group(spriteGroups[0], images);
+    MTR::RND::SpriteGroup::update(spriteGroups[0]);
+
   }
+
+}
+
+  MTR::RND::SpriteGroup* GameObjects::BG9::build(
+    std::string fileName, Box sizeInTiles, Box tileSize, int groupIndex, Vec2 srcPathing){
+
+    this->fullSize = {tileSize.width * sizeInTiles.width, tileSize.height * sizeInTiles.height};
+
+    std::vector<MTR::RND::Image*> menuBackground;
+
+    for(int y = 0; y < sizeInTiles.height; y++){
+      for(int x = 0; x < sizeInTiles.width; x++){
+        MTR::RND::Image* menuElt = MTR::createSprite(fileName, windows);
+
+        menuElt->area.box.width = tileSize.width;
+        menuElt->area.box.height = tileSize.height;
+
+        menuElt->bounds.pos.y = tileSize.height * y;
+
+        if(y == 0){
+          menuElt->area.pos.y = srcPathing.y + 0;
+        } else if (y == sizeInTiles.height - 1){
+          menuElt->area.pos.y = srcPathing.y + tileSize.height * 2;
+        } else {
+          menuElt->area.pos.y = srcPathing.y + tileSize.height;
+        }
+
+        menuElt->bounds.pos.x = tileSize.width * x;
+
+        if(x == 0){
+          menuElt->area.pos.x = srcPathing.x + 0;
+        } else if (x == sizeInTiles.width - 1){
+          menuElt->area.pos.x = srcPathing.x + tileSize.width * 2;
+        } else {
+          menuElt->area.pos.x = srcPathing.x + tileSize.width;
+        }
+
+        menuElt->setCrop(menuElt->area);
+        menuBackground.push_back(menuElt);
+      }
+    }
+
+    MTR::RND::Image::group(spriteGroups[groupIndex], menuBackground);
+    MTR::RND::SpriteGroup::update(spriteGroups[groupIndex]);
+
+    return spriteGroups[0];
+  }
+
+
+
+#define NONONO
+#ifndef NONONO
 
   BodiesMenu::BodiesMenu(std::string window, int layer, Vec2 position) : Npc::Npc(window, layer){
 
@@ -311,3 +332,5 @@ namespace Game {
   }
 
 }
+
+#endif

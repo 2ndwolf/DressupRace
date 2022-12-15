@@ -1,3 +1,7 @@
+#define NONONO
+#ifndef NONONO
+
+
 #include <SDL.h>
 
 #include "gameobjects.h"
@@ -16,3 +20,4 @@ namespace Actions{
     Pairings::character->sprites[2]->changeSurface("assets/shield" + std::to_string(number) + ".png");
   }
 }
+#endif
